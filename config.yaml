@@ -1,0 +1,5 @@
+ipmi:
+  hostname: 169.254.95.118
+  port: 623
+  username: fancontrol
+  password: fancontrol

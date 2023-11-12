@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "fancontrol"
+version = "0.0.1"
+description = "Fancontrol application for Dell R720 and IBM x3650"
+authors = ["Mathias Stærk <m@thsterk.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+python-ipmi = "^0.5.4"
+pyyaml = "^6.0.1"
+python-json-logger = "^2.0.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
