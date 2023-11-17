@@ -1,6 +1,9 @@
 # Nix direnv
 .direnv
 
+# sublime
+*.sublime-*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
