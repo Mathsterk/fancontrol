@@ -1,0 +1,10 @@
+name: fancontrol
+services:
+    fancontrol:
+        image: ghcr.io/mathsterk/fancontrol:main
+        volumes:
+            - ./config.yaml:/app/config.yaml:ro
+        restart: on-failure
+        logging:
+            options:
+                max-size: 100M
