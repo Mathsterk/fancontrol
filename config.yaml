@@ -4,9 +4,10 @@ ipmi:
   username: fancontrol
   password: fancontrol
 temp_speed:
-  10: 10
-  20: 20
-  30: 40
-  40: 50
-  50: 60
+  10: 5
+  20: 10
+  30: 25
+  40: 30
+  50: 50
+  55: 75
   60: 100
