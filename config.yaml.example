@@ -3,3 +3,11 @@ ipmi:
   port: 623
   username: fancontrol
   password: fancontrol
+temp_speed:
+  10: 5
+  20: 10
+  30: 25
+  40: 30
+  50: 50
+  55: 75
+  60: 100

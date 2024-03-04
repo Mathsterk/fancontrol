@@ -1,0 +1,6 @@
+[MASTER]
+disable=
+    W0718, # too broad exception
+
+[FORMAT]
+max-line-length = 120
