@@ -17,6 +17,12 @@ from time import sleep
 from logging_setup import logger, set_log_level
 import logging
 
+def sigterm_handler(signum, frame):
+    print("Received SIGTERM. Exiting...")
+    # Perform any cleanup or additional actions here
+    if ipmicontroller in globals():
+        ipmicontroller.close_session()
+    sys.exit(0)
 
 def handle_exception(message, error=None, exit_code=None):
     """
@@ -417,7 +423,7 @@ def get_opts():
 def main():
     get_opts()
 
-    global session
+    global ipmicontroller
     ipmicontroller = IPMI()
     ipmicontroller.initialize()
     ipmicontroller.get_device_attributes()
@@ -460,6 +466,7 @@ def main():
     ipmicontroller.close_session()
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGTERM, sigterm_handler)
     try:
         main()
     except KeyboardInterrupt:
