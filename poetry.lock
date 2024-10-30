@@ -123,13 +123,13 @@ files = [
 
 [[package]]
 name = "python-ipmi"
-version = "0.5.5"
+version = "0.5.7"
 description = "Pure python IPMI library"
 optional = false
 python-versions = "*"
 files = [
-    {file = "python-ipmi-0.5.5.tar.gz", hash = "sha256:c0428bbdfd42969e9586cb73b21c276fa9686cbac4e2bf4dd27669c533065149"},
-    {file = "python_ipmi-0.5.5-py3-none-any.whl", hash = "sha256:efdecd955ac64e2fe4bb0ef887023faed665674ffee3be6a35ed807ac25afb1b"},
+    {file = "python_ipmi-0.5.7-py3-none-any.whl", hash = "sha256:7d748fcb4220f66bd4c3526e29691494c487a86056951e4ad098ae63a352a02d"},
+    {file = "python_ipmi-0.5.7.tar.gz", hash = "sha256:9b129bca4f198c775624a1bdf199125dd11a486bc6620c55be2f7e7bedc980b9"},
 ]
 
 [[package]]
