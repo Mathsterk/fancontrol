@@ -2,15 +2,18 @@
 
 [[package]]
 name = "python-ipmi"
-version = "0.5.5"
+version = "0.6.1"
 description = "Pure python IPMI library"
 optional = false
-python-versions = "*"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "python-ipmi-0.5.5.tar.gz", hash = "sha256:c0428bbdfd42969e9586cb73b21c276fa9686cbac4e2bf4dd27669c533065149"},
-    {file = "python_ipmi-0.5.5-py3-none-any.whl", hash = "sha256:efdecd955ac64e2fe4bb0ef887023faed665674ffee3be6a35ed807ac25afb1b"},
+    {file = "python_ipmi-0.6.1-py3-none-any.whl", hash = "sha256:b1ac819ad28649b540d38c946de38266c0e7ab3cc3a2b041bcfd713e367f434d"},
+    {file = "python_ipmi-0.6.1.tar.gz", hash = "sha256:a4f3e738555f5ebfecbcd4b395ca62884c1057cbe24c29d4b9549799d57fb62e"},
 ]
+
+[package.extras]
+rmcpplus = ["cryptography"]
 
 [[package]]
 name = "python-json-logger"
@@ -88,4 +91,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "bacac7f049f5b298d0dd6286b7598fb274bacb1155996984b28f2c71eaf32630"
+content-hash = "1dcf25c07cc7a2b3a77c83c7e3c7e5f43bdc9b404ee778f5343f5b332a2375ac"
