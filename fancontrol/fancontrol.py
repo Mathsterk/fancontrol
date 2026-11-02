@@ -65,6 +65,7 @@ class IPMI:
         self.cpu_temp_sensor_ids = []
         self.fanspeed_sensor_ids = []
         self.fan_zone_ids = []
+        self.sdr_records = {}
 
         self.sigint_count = 0
         self.register_exit_handler()
@@ -291,6 +292,7 @@ class IPMI:
             iter_fct = self.ipmi_session.device_sdr_entries
 
         for s in iter_fct():
+            self.sdr_records[s.id] = s
             try:
                 number = None
                 value = None
@@ -325,7 +327,7 @@ class IPMI:
 
     def get_sensor_readings(self, ids):
         if len(ids) <1:
-            return
+            return []
 
         readings = []
 
@@ -335,7 +337,12 @@ class IPMI:
                 value = None
                 states = None
 
-                s = self.ipmi_session.get_repository_sdr(sensor)
+                # Use the SDR cached during the startup scan; re-fetching it
+                # needs an SDR reservation, which the BMC sometimes rejects
+                s = self.sdr_records.get(sensor)
+                if s is None:
+                    s = self.ipmi_session.get_repository_sdr(sensor)
+                    self.sdr_records[sensor] = s
 
                 if s.type is pyipmi.sdr.SDR_TYPE_FULL_SENSOR_RECORD:
                     (value, states) = self.ipmi_session.get_sensor_reading(s.number)
@@ -347,7 +354,8 @@ class IPMI:
                     (value, states) = self.ipmi_session.get_sensor_reading(s.number)
                     number = s.number
 
-                readings.append(value)
+                if value is not None:
+                    readings.append(value)
 
             except Exception as err:
                 logger.exception("couldn't get sensor reading!")
@@ -404,6 +412,11 @@ class IPMI:
 
 
 
+# Consecutive loops without a CPU temperature before giving up and
+# handing control back to the BMC
+MAX_FAILED_READS = 10
+
+
 def get_opts():
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'vd', ['verbose', 'debug'])
@@ -428,20 +441,24 @@ def main():
     ipmicontroller.initialize()
     ipmicontroller.get_device_attributes()
     ipmicontroller.get_sdr_list()
-    logger.info(
-        "Telling we've started up by setting the fans to 100%% for 2 secs, "
-        "then 1% for 2 secs, then 100% for 2 secs, and then starting the control loop"
-    )
-    ipmicontroller.set_fanspeed(255)
-    sleep(2)
-    ipmicontroller.set_fanspeed(1)
-    sleep(2)
-    ipmicontroller.set_fanspeed(255)
-    sleep(2)
+    logger.info("Starting the control loop")
+    failed_reads = 0
     try:
         while True:
-            cpu_temp = max(ipmicontroller.get_sensor_readings(ipmicontroller.cpu_temp_sensor_ids))
-            ambient_temp = max(ipmicontroller.get_sensor_readings(ipmicontroller.ambient_temp_sensor_ids))
+            cpu_temps = ipmicontroller.get_sensor_readings(ipmicontroller.cpu_temp_sensor_ids)
+            ambient_temps = ipmicontroller.get_sensor_readings(ipmicontroller.ambient_temp_sensor_ids)
+
+            if not cpu_temps:
+                failed_reads += 1
+                if failed_reads >= MAX_FAILED_READS:
+                    raise RuntimeError(f"no CPU temperature readings in {failed_reads} attempts")
+                logger.warning("no CPU temperature readings, retrying", extra={"failed_reads": failed_reads})
+                sleep(3)
+                continue
+            failed_reads = 0
+
+            cpu_temp = max(cpu_temps)
+            ambient_temp = max(ambient_temps) if ambient_temps else None
 
             targetspeed = round(ipmicontroller.interpolate_speed(ipmicontroller.configuration["temp_speed_curve"], cpu_temp) * 2.55)
 
