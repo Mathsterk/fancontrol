@@ -2,13 +2,18 @@
 """
 Sets up a logger that outputs JSON
 """
-import logging
-from pythonjsonlogger import jsonlogger
 import datetime
+import logging
 
-class CustomJsonFormatter(jsonlogger.JsonFormatter):
-    def add_fields(self, log_record, record, message_dict):
-        super(CustomJsonFormatter, self).add_fields(log_record, record, message_dict)
+from pythonjsonlogger import jsonlogger
+
+
+class CustomJsonFormatter(jsonlogger.JsonFormatter):  # pylint: disable=too-few-public-methods
+    """
+    JSON formatter that always adds an UTC timestamp and an upper case level
+    """
+    def add_fields(self, log_record, record, message_dict):  # pylint: disable=arguments-renamed
+        super().add_fields(log_record, record, message_dict)
         if not log_record.get('timestamp'):
             now = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
             log_record['timestamp'] = now
