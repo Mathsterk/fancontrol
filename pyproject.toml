@@ -9,7 +9,7 @@ readme = "README.md"
 python = "^3.11"
 python-ipmi = "^0.5.4"
 pyyaml = "^6.0.1"
-python-json-logger = "^2.0.7"
+python-json-logger = "^4.0.0"
 
 
 [build-system]
